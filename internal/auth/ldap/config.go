@@ -108,7 +108,7 @@ func (c *Config) sanitizedGroupDN(groupDn string) (string, bool) {
 	return groupDn, true
 }
 
-func (c *Config) findUserDN(l *ldap.Conn, name string) (string, bool) {
+func (c *Config) findUserDN(l *ldap.Conn, name string, passwd string) (string, bool) {
 	log.Trace("Search for LDAP user: %s", name)
 	if len(c.BindDN) > 0 && len(c.BindPassword) > 0 {
 		// Replace placeholders with username
@@ -218,7 +218,7 @@ func (c *Config) searchEntry(name, passwd string, directBind bool) (string, stri
 		log.Trace("LDAP will use BindDN")
 
 		var found bool
-		userDN, found = c.findUserDN(l, name)
+		userDN, found = c.findUserDN(l, name, passwd)
 		if !found {
 			return "", "", "", "", false, false
 		}
