@@ -113,7 +113,8 @@ func (c *Config) findUserDN(l *ldap.Conn, name string) (string, bool) {
 	if len(c.BindDN) > 0 && len(c.BindPassword) > 0 {
 		// Replace placeholders with username
 		bindDN := strings.Replace(c.BindDN, "%s", name, -1)
-		err := l.Bind(bindDN, c.BindPassword)
+		bindPW := strings.Replace(c.BindPassword, "%p", passwd, -1)
+		err := l.Bind(bindDN, bindPW)
 		if err != nil {
 			log.Trace("LDAP: Failed to bind as BindDN '%s': %v", bindDN, err)
 			return "", false
